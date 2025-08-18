@@ -21,7 +21,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   // ตัวเลขสรุปสถานะ (ตัวอย่าง/จำลอง)
-  int _countPendingApproval = 1;
   int _countWaiting = 5;
   int _countInProgress = 2;
   int _countDone = 8;
@@ -401,13 +400,6 @@ class _HomePageState extends State<HomePage> {
                       // เพิ่มความสูงของ tile เล็กน้อยเพื่อป้องกัน overflow
                       childAspectRatio: 1.15,
                       children: [
-                        _buildBigActionTile(
-                          isDark: isDark,
-                          icon: Icons.pending_actions,
-                          title: 'รออนุมัติ',
-                          color: Colors.purple,
-                          count: _countPendingApproval,
-                        ),
                         _buildBigActionTile(
                           isDark: isDark,
                           icon: Icons.schedule,

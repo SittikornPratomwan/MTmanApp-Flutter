@@ -12,15 +12,6 @@ class _ListPageState extends State<ListPage> {
   // ข้อมูลจำลองรายการแจ้งซ่อม
   final List<Map<String, dynamic>> _requests = [
     {
-      'id': 'REQ000',
-      'title': 'ขออนุมัติซ่อมประตู',
-      'category': 'ทั่วไป',
-      'priority': 'ปกติ',
-      'status': 'รออนุมัติ',
-      'date': '2025-08-07',
-      'description': 'บานพับประตูชำรุด ต้องการเปลี่ยน',
-    },
-    {
       'id': 'REQ001',
       'title': 'ซ่อมแอร์ห้องประชุม',
       'category': 'แอร์',
@@ -50,7 +41,7 @@ class _ListPageState extends State<ListPage> {
   ];
 
   String _selectedFilter = 'ทั้งหมด';
-  final List<String> _filterOptions = ['ทั้งหมด', 'รออนุมัติ', 'รอดำเนินการ', 'กำลังดำเนินการ', 'เสร็จสิ้น'];
+  final List<String> _filterOptions = ['ทั้งหมด', 'รอดำเนินการ', 'กำลังดำเนินการ', 'เสร็จสิ้น'];
 
   @override
   void initState() {
@@ -196,10 +187,6 @@ class _ListPageState extends State<ListPage> {
     IconData statusIcon;
     
     switch (request['status']) {
-      case 'รออนุมัติ':
-        statusColor = Colors.purple;
-        statusIcon = Icons.pending_actions;
-        break;
       case 'รอดำเนินการ':
         statusColor = Colors.orange;
         statusIcon = Icons.pending;
