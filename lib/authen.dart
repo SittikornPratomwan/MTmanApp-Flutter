@@ -69,7 +69,7 @@ class _AuthenState extends State<Authen> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color.fromARGB(255, 176, 208, 240), Colors.white],
+                  colors: [Color(0xFFB3C7E6), Color(0xFFEFEFEF)], // ฟ้าอ่อน + เทาอ่อน
                 ),
               ),
         child: SafeArea(
@@ -98,7 +98,7 @@ class _AuthenState extends State<Authen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(60),
                       child: Image.asset(
-                        'images/logo.jpg',
+                        'images/icon.png',
                         fit: BoxFit.cover,
                         width: 120,
                         height: 120,

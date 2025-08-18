@@ -300,7 +300,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'ระบบแจ้งซ่อมออนไลน์',
+                            'ระบบช่างซ่อมออนไลน์',
                             style: TextStyle(
                               fontSize: 16,
                               color: isDark ? Colors.white70 : Colors.black54,
