@@ -116,7 +116,7 @@ class _AuthenState extends State<Authen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'ระบบใบซ่อมสร้าง MT Request',
+                    'ระบบช่างซ่อม MT man',
                     style: TextStyle(
                       fontSize: 16,
                       color: isDark ? Colors.white70 : Colors.black54,
