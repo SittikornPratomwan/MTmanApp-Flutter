@@ -20,6 +20,7 @@ class _ReportPageState extends State<ReportPage> {
       'pending': 3,
       'inProgress': 2,
       'avgTime': '2.5 วัน',
+      'satisfaction': 4.2,
     },
     {
       'category': 'ประปา',
@@ -27,6 +28,7 @@ class _ReportPageState extends State<ReportPage> {
       'pending': 1,
       'inProgress': 1,
       'avgTime': '1.8 วัน',
+      'satisfaction': 4.5,
     },
     {
       'category': 'แอร์',
@@ -34,6 +36,7 @@ class _ReportPageState extends State<ReportPage> {
       'pending': 2,
       'inProgress': 1,
       'avgTime': '3.2 วัน',
+      'satisfaction': 4.1,
     },
     {
       'category': 'อินเทอร์เน็ต',
@@ -41,6 +44,7 @@ class _ReportPageState extends State<ReportPage> {
       'pending': 0,
       'inProgress': 1,
       'avgTime': '1.2 วัน',
+      'satisfaction': 4.7,
     },
   ];
 
@@ -238,13 +242,31 @@ class _ReportPageState extends State<ReportPage> {
           const SizedBox(height: 16),
           Divider(color: isDark ? Colors.white12 : Colors.black12),
           const SizedBox(height: 16),
-          Center(
-            child: _buildMetricItem(
-              isDark: isDark,
-              icon: Icons.access_time,
-              title: 'เวลาเฉลี่ย',
-              value: data['avgTime'],
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: _buildMetricItem(
+                  isDark: isDark,
+                  icon: Icons.access_time,
+                  title: 'เวลาเฉลี่ย',
+                  value: data['avgTime'],
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 40,
+                color: isDark ? Colors.white12 : Colors.black12,
+              ),
+              Expanded(
+                child: _buildMetricItem(
+                  isDark: isDark,
+                  icon: Icons.star,
+                  title: 'ความพึงพอใจ',
+                  value: '${data['satisfaction']}',
+                  valueColor: Colors.amber,
+                ),
+              ),
+            ],
           ),
         ],
       ),
