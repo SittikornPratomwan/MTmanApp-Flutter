@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../---Request---/request.dart';
 import '../---List---/list.dart';
 import '../---Drawer---/drawer.dart';
 import '../---Drawer---/1.setting/theme_provider.dart';
+import '../---Report---/report.dart';
 
 class HomePage extends StatefulWidget {
   final String location;
@@ -49,7 +49,9 @@ class _HomePageState extends State<HomePage> {
       if (index == 0) {
         _selectedIndex = 0; // หน้าแรก
       } else if (index == 1) {
-        _selectedIndex = 2; // รายการ (index 2 ใน IndexedStack)
+        _selectedIndex = 1; // รายการ (index 1 ใน IndexedStack)
+      } else if (index == 2) {
+        _selectedIndex = 2; // รายงาน (index 2 ใน IndexedStack)
       }
     });
   }
@@ -202,9 +204,9 @@ class _HomePageState extends State<HomePage> {
         case 0:
           return 'หน้าแรก';
         case 1:
-          return 'แจ้งซ่อม';
-        case 2:
           return 'รายการ';
+        case 2:
+          return 'รายงาน';
         default:
           return 'หน้าแรก';
       }
@@ -436,10 +438,10 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-          // หน้าแจ้งซ่อม
-          const RequestPage(),
           // หน้ารายการ
           const ListPage(),
+          // หน้ารายงาน
+          const ReportPage(),
         ],
       ),
       bottomNavigationBar: Container(
@@ -474,8 +476,12 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(Icons.list),
                 label: 'รายการ',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.assessment),
+                label: 'รายงาน',
+              ),
             ],
-            currentIndex: _selectedIndex == 2 ? 1 : _selectedIndex,
+            currentIndex: _selectedIndex,
             selectedItemColor: isDark ? Colors.lightBlueAccent : Colors.blue,
             unselectedItemColor: isDark ? Colors.white54 : Colors.black54,
             backgroundColor: Colors.transparent,
@@ -484,21 +490,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const RequestPage()),
-          );
-        },
-        backgroundColor: isDark ? Colors.lightBlueAccent : Colors.blue,
-        foregroundColor: Colors.white,
-        elevation: 8,
-        shape: const CircleBorder(),
-        child: const Icon(Icons.build, size: 28),
-        tooltip: 'แจ้งซ่อม',
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
     );
   }
 }

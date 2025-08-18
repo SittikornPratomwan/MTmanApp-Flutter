@@ -14,7 +14,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
   String _selectedLanguage = 'ไทย';
-  bool _notificationsEnabled = true;
+  // notification enabled flag removed since notifications UI went away
   
   @override
   void initState() {
@@ -51,10 +51,11 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
     try {
       final permission = Permission.notification;
       final status = await permission.status;
-      if (mounted) {
-        setState(() {
-          _notificationsEnabled = status.isGranted;
-        });
+      // We keep this check for future use but do not store state here
+      if (status.isGranted) {
+        // notifications are allowed on device
+      } else {
+        // notifications are not allowed or restricted
       }
     } catch (e) {
       print('Error checking notification permission: $e');
@@ -62,44 +63,7 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
   }
 
   // เปิด/ปิดการแจ้งเตือนในเครื่อง
-  Future<void> _toggleSystemNotification(bool value) async {
-    try {
-      if (value) {
-        // เปิดการแจ้งเตือน - ขอสิทธิ์
-        final permission = Permission.notification;
-        final status = await permission.request();
-        
-        if (status.isGranted) {
-          if (mounted) {
-            setState(() {
-              _notificationsEnabled = true;
-            });
-            _showSuccessMessage('เปิดการแจ้งเตือนเรียบร้อยแล้ว');
-            // แสดงการแจ้งเตือนทดสอบ
-            await _showTestNotification();
-          }
-        } else if (status.isDenied || status.isPermanentlyDenied) {
-          if (mounted) {
-            setState(() {
-              _notificationsEnabled = false;
-            });
-            _showOpenSettingsDialog('เปิดการแจ้งเตือน');
-          }
-        }
-      } else {
-        // ปิดการแจ้งเตือน - นำไปยังหน้าตั้งค่าเพื่อปิดการแจ้งเตือน
-        _showOpenSettingsDialog('ปิดการแจ้งเตือน');
-      }
-    } catch (e) {
-      print('Error toggling notification: $e');
-      // Fallback: แสดง dialog เพื่อไปตั้งค่า
-      if (value) {
-        _showOpenSettingsDialog('เปิดการแจ้งเตือน');
-      } else {
-        _showOpenSettingsDialog('ปิดการแจ้งเตือน');
-      }
-    }
-  }
+  // _toggleSystemNotification removed because notification UI was removed
 
   // แสดงการแจ้งเตือนทดสอบ
   Future<void> _showTestNotification() async {
@@ -293,17 +257,6 @@ class _SettingPageState extends State<SettingPage> with WidgetsBindingObserver {
               onTap: () {
                 _showLanguageDialog(context, isDark);
               },
-            ),
-            const Divider(),
-            ListTile(
-              leading: Icon(Icons.notifications, color: isDark ? Colors.lightBlueAccent : Colors.blue),
-              title: Text('การแจ้งเตือน', style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
-              trailing: Switch(
-                value: _notificationsEnabled,
-                onChanged: _toggleSystemNotification,
-                activeColor: Colors.lightBlueAccent,
-                inactiveThumbColor: Colors.blue,
-              ),
             ),
             const Divider(),
             ListTile(
