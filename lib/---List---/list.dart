@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../---Drawer---/1.setting/theme_provider.dart';
+import 'request_detail.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key});
@@ -221,7 +222,7 @@ class _ListPageState extends State<ListPage> {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
-        onTap: () => _showRequestDetail(request),
+        onTap: () => _navigateToDetail(request),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -331,67 +332,34 @@ class _ListPageState extends State<ListPage> {
     return _requests.where((request) => request['status'] == _selectedFilter).toList();
   }
 
-  void _showRequestDetail(Map<String, dynamic> request) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final isDark = AppTheme.isDarkMode;
-        return AlertDialog(
-          backgroundColor: isDark ? const Color(0xFF232526) : Colors.white,
-          title: Text(
-            'รายละเอียดใบแจ้งซ่อม',
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDetailRow('รหัส:', request['id'], isDark),
-              _buildDetailRow('หัวข้อ:', request['title'], isDark),
-              _buildDetailRow('หมวดหมู่:', request['category'], isDark),
-              _buildDetailRow('สถานะ:', request['status'], isDark),
-              _buildDetailRow('วันที่:', request['date'], isDark),
-              _buildDetailRow('รายละเอียด:', request['description'], isDark),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'ปิด',
-                style: TextStyle(color: isDark ? Colors.lightBlueAccent : Colors.blue),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value, bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white70 : Colors.black54,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-            ),
-          ),
-        ],
+  void _navigateToDetail(Map<String, dynamic> request) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RequestDetailPage(request: request),
       ),
     );
+    
+    // ถ้าได้ผลลัพธ์กลับมา (จบงาน) ให้อัพเดทสถานะ
+    if (result == true) {
+      setState(() {
+        // ค้นหาและอัพเดทสถานะของรายการที่จบงาน
+        final index = _requests.indexWhere((r) => r['id'] == request['id']);
+        if (index != -1) {
+          _requests[index]['status'] = 'เสร็จสิ้น';
+        }
+      });
+      
+      // แสดงข้อความแจ้งเตือน
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('งาน "${request['title']}" ได้รับการจบงานเรียบร้อยแล้ว'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
   }
 }

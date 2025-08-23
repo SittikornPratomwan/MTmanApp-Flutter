@@ -115,7 +115,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 // เพิ่มปุ่มประวัติการแจ้งซ่อมไว้ด้านบน
                 _buildDrawerItem(
                   icon: Icons.history,
-                  title: 'ประวัติการแจ้งซ่อมของฉัน',
+                  title: 'ประวัติการซ่อม',
                   isDark: isDark,
                   onTap: () {
                     Navigator.pop(context);
