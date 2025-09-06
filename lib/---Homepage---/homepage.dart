@@ -333,7 +333,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'สถิติตามหมวดหมู่',
+                                'หมวดหมู่งาน',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

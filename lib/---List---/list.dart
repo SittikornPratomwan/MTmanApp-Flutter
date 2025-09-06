@@ -10,13 +10,12 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  // ข้อมูลจำลองรายการแจ้งซ่อม
+  // ข้อมูลจำลองรายการแจ้งซ่อม (ลบ priority ออก)
   final List<Map<String, dynamic>> _requests = [
     {
       'id': 'REQ001',
       'title': 'ซ่อมแอร์ห้องประชุม',
       'category': 'แอร์',
-      'priority': 'ด่วน',
       'status': 'รอดำเนินการ',
       'date': '2025-08-06',
       'description': 'แอร์ไม่เย็น เสียงดัง',
@@ -25,7 +24,6 @@ class _ListPageState extends State<ListPage> {
       'id': 'REQ002', 
       'title': 'ซ่อมหลอดไฟ',
       'category': 'ไฟฟ้า',
-      'priority': 'ปกติ',
       'status': 'กำลังดำเนินการ',
       'date': '2025-08-05',
       'description': 'หลอดไฟห้องทำงานขัดข้อง',
@@ -34,7 +32,6 @@ class _ListPageState extends State<ListPage> {
       'id': 'REQ003',
       'title': 'ซ่อมท่อน้ำรั่ว',
       'category': 'ประปา', 
-      'priority': 'ด่วนมาก',
       'status': 'เสร็จสิ้น',
       'date': '2025-08-04',
       'description': 'ท่อน้ำใต้อ่างล้างจานรั่ว',
