@@ -12,18 +12,13 @@ class Authen extends StatefulWidget {
 class _AuthenState extends State<Authen> {
   late double screenWidth, screenHeight;
   bool redEye = true;
-  String? selectedLocation;
-  int? selectedLocationId;
+  // location fields removed
   bool isLoading = false;
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final Map<String, int> locationIdMap = {
-    'LamLukKa': 1,
-    'BanBueng': 2,
-    'HeadOffice': 3,
-  };
+  // locationIdMap removed
 
   @override
   void initState() {
@@ -132,8 +127,7 @@ class _AuthenState extends State<Authen> {
                   const SizedBox(height: 20),
                   buildPasswordField(isDark: isDark),
                   const SizedBox(height: 30),
-                  buildLocationRadio(isDark: isDark),
-                  const SizedBox(height: 30),
+                  // location selection removed
                   buildLoginButton(isDark: isDark),
                 ],
               ),
@@ -233,65 +227,7 @@ class _AuthenState extends State<Authen> {
     );
   }
 
-  Widget buildLocationRadio({required bool isDark}) {
-    final List<Map<String, dynamic>> locations = [
-      {'id': 1, 'name': 'LamLukKa', 'displayKey': 'lam_luk_ka'},
-      {'id': 2, 'name': 'BanBueng', 'displayKey': 'ban_bueng'},
-      {'id': 3, 'name': 'HeadOffice', 'displayKey': 'head_office'},
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF232526) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.3) : Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'สถานที่:',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: isDark ? Colors.lightBlue[200] : Colors.blue,
-            ),
-          ),
-          const SizedBox(height: 10),
-          ...locations.map(
-            (loc) => RadioListTile<int>(
-              title: Text(
-                loc['displayKey'] == 'lam_luk_ka'
-                    ? 'ลำลูกกา'
-                    : loc['displayKey'] == 'ban_bueng'
-                        ? 'บ้านบึง'
-                        : 'สำนักงานใหญ่',
-                style: TextStyle(color: isDark ? Colors.white : Colors.black),
-              ),
-              value: loc['id'],
-              groupValue: selectedLocationId,
-              onChanged: (int? value) {
-                setState(() {
-                  selectedLocationId = value;
-                  selectedLocation = loc['name'];
-                });
-              },
-              activeColor: isDark ? Colors.lightBlueAccent : Colors.blue,
-              tileColor: Colors.transparent,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // buildLocationRadio removed
 
   Widget buildLoginButton({required bool isDark}) {
     return Container(
@@ -345,13 +281,7 @@ class _AuthenState extends State<Authen> {
       );
       return;
     }
-    if (selectedLocationId == null) {
-      showSnackbar(
-        'กรุณาเลือกสถานที่',
-        backgroundColor: Colors.red
-      );
-      return;
-    }
+    // location check removed
 
     setState(() {
       isLoading = true;
@@ -362,7 +292,7 @@ class _AuthenState extends State<Authen> {
 
     // Allow login with any valid username/password
     if (usernameController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      print('Login Success: Location = ${selectedLocation ?? ''}, ID = ${selectedLocationId ?? ''}');
+  print('Login Success');
       showSnackbar(
         'เข้าสู่ระบบสำเร็จ',
         backgroundColor: Colors.green,
@@ -372,9 +302,9 @@ class _AuthenState extends State<Authen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(
-              location: selectedLocation ?? '',
-              locationId: selectedLocationId,
+            builder: (context) => const HomePage(
+              location: '',
+              locationId: null,
             ),
           ),
         );
