@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '---List---/list.dart';
 import '../---Drawer---/drawer.dart';
 import '../---Drawer---/1.setting/theme_provider.dart';
+import '../---List---/list.dart';
 import '../---Report---/report.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   int _countWaiting = 5;
   int _countInProgress = 2;
   int _countDone = 8;
+  int _countPR = 0; // รอจัดซื้อ PR
 
   @override
   void initState() {
@@ -259,8 +260,8 @@ class _HomePageState extends State<HomePage> {
             final categoryAspect = isWide ? 3.2 : 2.5;
 
             // action tile columns adapt to width
-            final actionCols = isWide ? 3 : 2;
-            final actionAspect = isWide ? 1.4 : 1.15;
+            final actionCols = isWide ? 4 : 2;
+            final actionAspect = isWide ? 1.2 : 1.15;
 
             return Container(
               constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
@@ -396,6 +397,34 @@ class _HomePageState extends State<HomePage> {
                                         icon: Icons.wifi,
                                         color: Colors.purple,
                                       ),
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'รถยนต์/โฟคลิฟ',
+                                        count: 2,
+                                        icon: Icons.directions_car,
+                                        color: Colors.teal,
+                                      ),
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'หอพัก',
+                                        count: 1,
+                                        icon: Icons.apartment,
+                                        color: Colors.indigo,
+                                      ),
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'เครื่องจักร',
+                                        count: 3,
+                                        icon: Icons.precision_manufacturing,
+                                        color: Colors.brown,
+                                      ),
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'อื่นๆ',
+                                        count: 0,
+                                        icon: Icons.more_horiz,
+                                        color: Colors.grey,
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -435,6 +464,13 @@ class _HomePageState extends State<HomePage> {
                                   title: 'เสร็จสิ้น',
                                   color: Colors.green,
                                   count: _countDone,
+                                ),
+                                _buildBigActionTile(
+                                  isDark: isDark,
+                                  icon: Icons.shopping_cart,
+                                  title: 'รอจัดซื้อ PR',
+                                  color: Colors.deepPurple,
+                                  count: _countPR,
                                 ),
                               ],
                             ),

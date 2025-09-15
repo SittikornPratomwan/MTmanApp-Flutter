@@ -7,7 +7,6 @@ import '../---Drawer---/1.setting/theme_provider.dart';
       'id': 'HIS001',
       'title': 'ซ่อมคอมพิวเตอร์',
       'category': 'IT',
-      'priority': 'ด่วน',
       'status': 'เสร็จสิ้น',
       'date': '2025-08-01',
       'description': 'คอมพิวเตอร์เปิดไม่ติด',
@@ -16,7 +15,6 @@ import '../---Drawer---/1.setting/theme_provider.dart';
       'id': 'HIS002',
       'title': 'ซ่อมไฟห้องประชุม',
       'category': 'ไฟฟ้า',
-      'priority': 'ปกติ',
       'status': 'กำลังดำเนินการ',
       'date': '2025-08-03',
       'description': 'ไฟห้องประชุมดับ',
@@ -25,7 +23,6 @@ import '../---Drawer---/1.setting/theme_provider.dart';
       'id': 'HIS003',
       'title': 'ซ่อมแอร์',
       'category': 'แอร์',
-      'priority': 'ด่วนมาก',
       'status': 'รอดำเนินการ',
       'date': '2025-08-05',
       'description': 'แอร์ไม่เย็น',
@@ -62,17 +59,7 @@ import '../---Drawer---/1.setting/theme_provider.dart';
         statusColor = Colors.grey;
         statusIcon = Icons.help;
     }
-    Color priorityColor;
-    switch (item['priority']) {
-      case 'ด่วนมาก':
-        priorityColor = Colors.red;
-        break;
-      case 'ด่วน':
-        priorityColor = Colors.orange;
-        break;
-      default:
-        priorityColor = Colors.green;
-    }
+    // priority removed per request
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -108,22 +95,7 @@ import '../---Drawer---/1.setting/theme_provider.dart';
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: priorityColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: priorityColor),
-                    ),
-                    child: Text(
-                      item['priority'],
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: priorityColor,
-                      ),
-                    ),
-                  ),
+                  // priority badge removed
                 ],
               ),
               const SizedBox(height: 8),
@@ -225,7 +197,7 @@ import '../---Drawer---/1.setting/theme_provider.dart';
               _buildDetailRow('รหัส:', item['id'], isDark),
               _buildDetailRow('หัวข้อ:', item['title'], isDark),
               _buildDetailRow('หมวดหมู่:', item['category'], isDark),
-              _buildDetailRow('ความสำคัญ:', item['priority'], isDark),
+              // priority detail removed
               _buildDetailRow('สถานะ:', item['status'], isDark),
               _buildDetailRow('วันที่:', item['date'], isDark),
               _buildDetailRow('รายละเอียด:', item['description'], isDark),
