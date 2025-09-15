@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../---List---/list.dart';
+import 'dart:math' as math;
+import '---List---/list.dart';
 import '../---Drawer---/drawer.dart';
 import '../---Drawer---/1.setting/theme_provider.dart';
 import '../---Report---/report.dart';
@@ -248,189 +249,205 @@ class _HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          // หน้าแรก
-          Container(
-            // Ensure the background gradient covers the full screen height
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
-            decoration: isDark
-                ? const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF232526), Color(0xFF414345)],
-                    ),
-                  )
-                : const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      // Use two light-blue tones so it doesn't turn white at the bottom
-                      colors: [Color(0xFFB0D0F0), Color(0xFFDCEBFA)],
-                    ),
-                  ),
-            child: SingleChildScrollView(
-              padding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                  // เพิ่มระยะห่างจากขอบบนหน้าจอเล็กน้อย
-                  const SizedBox(height: 16),
-                  // ยินดีต้อนรับ
-                  Card(
-                    color: isDark ? Colors.grey[900] : Colors.white,
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
-                      child: Column(
-                        children: [
-                          Icon(Icons.handshake, size: 40, color: isDark ? Colors.lightBlueAccent : Colors.blue),
-                          const SizedBox(height: 6),
-                          Text(
-                            'ยินดีต้อนรับ!',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.blue.shade700,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'ระบบช่างซ่อมออนไลน์',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: isDark ? Colors.white70 : Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  
-                  // สถิติแต่ละหมวดหมู่
-                  Card(
-                    color: isDark ? Colors.grey[900] : Colors.white,
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.category,
-                                color: isDark ? Colors.lightBlueAccent : Colors.blue,
-                                size: 24,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'หมวดหมู่งาน',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: isDark ? Colors.white : Colors.blue.shade700,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: 2,
-                            // Increase item height a bit to avoid tiny overflow on some screens
-                            childAspectRatio: 2.5,
-                            mainAxisSpacing: 4,
-                            crossAxisSpacing: 4,
-                            children: [
-                              _buildCategoryCard(
-                                isDark: isDark,
-                                title: 'ไฟฟ้า',
-                                count: 7,
-                                icon: Icons.electrical_services,
-                                color: Colors.amber,
-                              ),
-                              _buildCategoryCard(
-                                isDark: isDark,
-                                title: 'ประปา',
-                                count: 4,
-                                icon: Icons.water_drop,
-                                color: Colors.blue,
-                              ),
-                              _buildCategoryCard(
-                                isDark: isDark,
-                                title: 'แอร์',
-                                count: 3,
-                                icon: Icons.ac_unit,
-                                color: Colors.cyan,
-                              ),
-                              _buildCategoryCard(
-                                isDark: isDark,
-                                title: 'อินเทอร์เน็ต',
-                                count: 1,
-                                icon: Icons.wifi,
-                                color: Colors.purple,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+          // หน้าแรก (responsive)
+          LayoutBuilder(builder: (context, constraints) {
+            final maxContentWidth = math.min(1100, constraints.maxWidth * 0.95).toDouble();
+            final isWide = maxContentWidth > 900;
 
-                  // ปุ่มใหญ่ ๆ มองง่าย (UI เท่านั้น ไม่ได้ผูกการทำงาน)
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      // เพิ่มความสูงของ tile เล็กน้อยเพื่อป้องกัน overflow
-                      childAspectRatio: 1.15,
-                      children: [
-                        _buildBigActionTile(
-                          isDark: isDark,
-                          icon: Icons.schedule,
-                          title: 'รอดำเนินการ',
-                          color: Colors.orange,
-                          count: _countWaiting,
-                        ),
-                        _buildBigActionTile(
-                          isDark: isDark,
-                          icon: Icons.engineering,
-                          title: 'กำลังซ่อม',
-                          color: Colors.blue,
-                          count: _countInProgress,
-                        ),
-                        _buildBigActionTile(
-                          isDark: isDark,
-                          icon: Icons.check_circle,
-                          title: 'เสร็จสิ้น',
-                          color: Colors.green,
-                          count: _countDone,
-                        ),
-                      ],
+            // category grid columns adapt to width
+            final categoryCols = isWide ? 4 : 2;
+            final categoryAspect = isWide ? 3.2 : 2.5;
+
+            // action tile columns adapt to width
+            final actionCols = isWide ? 3 : 2;
+            final actionAspect = isWide ? 1.4 : 1.15;
+
+            return Container(
+              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              decoration: isDark
+                  ? const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFF232526), Color(0xFF414345)],
+                      ),
+                    )
+                  : const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFFB0D0F0), Color(0xFFDCEBFA)],
+                      ),
+                    ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: maxContentWidth),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 18),
+                          // Welcome Card
+                          Card(
+                            color: isDark ? Colors.grey[900] : Colors.white,
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.handshake, size: 48, color: isDark ? Colors.lightBlueAccent : Colors.blue),
+                                  const SizedBox(width: 18),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'ยินดีต้อนรับ!',
+                                          style: TextStyle(
+                                            fontSize: isWide ? 28 : 22,
+                                            fontWeight: FontWeight.bold,
+                                            color: isDark ? Colors.white : Colors.blue.shade700,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          'ระบบช่างซ่อมออนไลน์',
+                                          style: TextStyle(
+                                            fontSize: isWide ? 18 : 16,
+                                            color: isDark ? Colors.white70 : Colors.black54,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Category stats
+                          Card(
+                            color: isDark ? Colors.grey[900] : Colors.white,
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.category,
+                                        color: isDark ? Colors.lightBlueAccent : Colors.blue,
+                                        size: 24,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'หมวดหมู่งาน',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: isDark ? Colors.white : Colors.blue.shade700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    crossAxisCount: categoryCols,
+                                    childAspectRatio: categoryAspect,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                    children: [
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'ไฟฟ้า',
+                                        count: 7,
+                                        icon: Icons.electrical_services,
+                                        color: Colors.amber,
+                                      ),
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'ประปา',
+                                        count: 4,
+                                        icon: Icons.water_drop,
+                                        color: Colors.blue,
+                                      ),
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'แอร์',
+                                        count: 3,
+                                        icon: Icons.ac_unit,
+                                        color: Colors.cyan,
+                                      ),
+                                      _buildCategoryCard(
+                                        isDark: isDark,
+                                        title: 'อินเทอร์เน็ต',
+                                        count: 1,
+                                        icon: Icons.wifi,
+                                        color: Colors.purple,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Big action tiles
+                          const SizedBox(height: 8),
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: actionCols,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: actionAspect,
+                              children: [
+                                _buildBigActionTile(
+                                  isDark: isDark,
+                                  icon: Icons.schedule,
+                                  title: 'รอดำเนินการ',
+                                  color: Colors.orange,
+                                  count: _countWaiting,
+                                ),
+                                _buildBigActionTile(
+                                  isDark: isDark,
+                                  icon: Icons.engineering,
+                                  title: 'กำลังซ่อม',
+                                  color: Colors.blue,
+                                  count: _countInProgress,
+                                ),
+                                _buildBigActionTile(
+                                  isDark: isDark,
+                                  icon: Icons.check_circle,
+                                  title: 'เสร็จสิ้น',
+                                  color: Colors.green,
+                                  count: _countDone,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  // เมนูหลัก (ถูกนำออกตามคำขอ)
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
-          // หน้ารายการ
+            );
+          }),
+        // หน้ารายการ
           const ListPage(),
           // หน้ารายงาน
           const ReportPage(),
