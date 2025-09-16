@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../---Drawer---/1.setting/theme_provider.dart';
-import 'request_detail.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key});
@@ -10,12 +9,22 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  // ข้อมูลจำลองรายการแจ้งซ่อม (ลบ priority ออก)
+  // ข้อมูลจำลองรายการแจ้งซ่อม
   final List<Map<String, dynamic>> _requests = [
+    {
+      'id': 'REQ000',
+      'title': 'ขออนุมัติซ่อมประตู',
+      'category': 'ทั่วไป',
+      'priority': 'ปกติ',
+      'status': 'รออนุมัติ',
+      'date': '2025-08-07',
+      'description': 'บานพับประตูชำรุด ต้องการเปลี่ยน',
+    },
     {
       'id': 'REQ001',
       'title': 'ซ่อมแอร์ห้องประชุม',
       'category': 'แอร์',
+      'priority': 'ด่วน',
       'status': 'รอดำเนินการ',
       'date': '2025-08-06',
       'description': 'แอร์ไม่เย็น เสียงดัง',
@@ -24,6 +33,7 @@ class _ListPageState extends State<ListPage> {
       'id': 'REQ002', 
       'title': 'ซ่อมหลอดไฟ',
       'category': 'ไฟฟ้า',
+      'priority': 'ปกติ',
       'status': 'กำลังดำเนินการ',
       'date': '2025-08-05',
       'description': 'หลอดไฟห้องทำงานขัดข้อง',
@@ -32,6 +42,7 @@ class _ListPageState extends State<ListPage> {
       'id': 'REQ003',
       'title': 'ซ่อมท่อน้ำรั่ว',
       'category': 'ประปา', 
+      'priority': 'ด่วนมาก',
       'status': 'เสร็จสิ้น',
       'date': '2025-08-04',
       'description': 'ท่อน้ำใต้อ่างล้างจานรั่ว',
@@ -39,7 +50,7 @@ class _ListPageState extends State<ListPage> {
   ];
 
   String _selectedFilter = 'ทั้งหมด';
-  final List<String> _filterOptions = ['ทั้งหมด', 'รอดำเนินการ', 'กำลังดำเนินการ', 'เสร็จสิ้น'];
+  final List<String> _filterOptions = ['ทั้งหมด', 'รออนุมัติ', 'รอดำเนินการ', 'กำลังดำเนินการ', 'เสร็จสิ้น'];
 
   @override
   void initState() {
@@ -185,6 +196,10 @@ class _ListPageState extends State<ListPage> {
     IconData statusIcon;
     
     switch (request['status']) {
+      case 'รออนุมัติ':
+        statusColor = Colors.purple;
+        statusIcon = Icons.pending_actions;
+        break;
       case 'รอดำเนินการ':
         statusColor = Colors.orange;
         statusIcon = Icons.pending;
@@ -219,7 +234,7 @@ class _ListPageState extends State<ListPage> {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
-        onTap: () => _navigateToDetail(request),
+        onTap: () => _showRequestDetail(request),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -329,34 +344,67 @@ class _ListPageState extends State<ListPage> {
     return _requests.where((request) => request['status'] == _selectedFilter).toList();
   }
 
-  void _navigateToDetail(Map<String, dynamic> request) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RequestDetailPage(request: request),
+  void _showRequestDetail(Map<String, dynamic> request) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final isDark = AppTheme.isDarkMode;
+        return AlertDialog(
+          backgroundColor: isDark ? const Color(0xFF232526) : Colors.white,
+          title: Text(
+            'รายละเอียดใบแจ้งซ่อม',
+            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildDetailRow('รหัส:', request['id'], isDark),
+              _buildDetailRow('หัวข้อ:', request['title'], isDark),
+              _buildDetailRow('หมวดหมู่:', request['category'], isDark),
+              _buildDetailRow('สถานะ:', request['status'], isDark),
+              _buildDetailRow('วันที่:', request['date'], isDark),
+              _buildDetailRow('รายละเอียด:', request['description'], isDark),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'ปิด',
+                style: TextStyle(color: isDark ? Colors.lightBlueAccent : Colors.blue),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white70 : Colors.black54,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            ),
+          ),
+        ],
       ),
     );
-    
-    // ถ้าได้ผลลัพธ์กลับมา (จบงาน) ให้อัพเดทสถานะ
-    if (result == true) {
-      setState(() {
-        // ค้นหาและอัพเดทสถานะของรายการที่จบงาน
-        final index = _requests.indexWhere((r) => r['id'] == request['id']);
-        if (index != -1) {
-          _requests[index]['status'] = 'เสร็จสิ้น';
-        }
-      });
-      
-      // แสดงข้อความแจ้งเตือน
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('งาน "${request['title']}" ได้รับการจบงานเรียบร้อยแล้ว'),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
-    }
   }
 }

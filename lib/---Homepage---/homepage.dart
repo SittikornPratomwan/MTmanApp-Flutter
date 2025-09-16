@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import '../---Drawer---/drawer.dart';
 import '../---Drawer---/1.setting/theme_provider.dart';
 import '../---List---/list.dart';
+import 'pending_detail.dart';
 import '../---Report---/report.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,6 +27,30 @@ class _HomePageState extends State<HomePage> {
   int _countInProgress = 2;
   int _countDone = 8;
   int _countPR = 0; // รอจัดซื้อ PR
+
+  // ข้อมูลจำลองรายการรออนุมัติ (ตัวอย่าง)
+  final List<Map<String, dynamic>> _pendingRequests = [
+    {
+      'id': 'REQ001',
+      'title': 'ซ่อมหลอดไฟห้องประชุม',
+      'category': 'ไฟฟ้า',
+      'type': 'ซ่อม',
+      'description': 'หลอดไฟในห้องประชุมชั้น 2 ไม่ติด',
+      'requestDate': '2024-03-15',
+      'requester': 'นายสมชาย ใจดี',
+      'phone': '081-234-5678',
+    },
+    {
+      'id': 'REQ002',
+      'title': 'ท่อน้ำรั่วห้องน้ำชั้น 3',
+      'category': 'ประปา',
+      'type': 'ซ่อม',
+      'description': 'ท่อนน้ำใต้อ่างล้างหน้ามีน้ำรั่ว',
+      'requestDate': '2024-03-16',
+      'requester': 'นางสาวมาลี สวยงาม',
+      'phone': '089-876-5432',
+    },
+  ];
 
   @override
   void initState() {
@@ -432,48 +457,119 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
 
-                          // Big action tiles
+                          // Big action tiles + optional pending approvals
                           const SizedBox(height: 8),
-                          Container(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              crossAxisCount: actionCols,
-                              mainAxisSpacing: 12,
-                              crossAxisSpacing: 12,
-                              childAspectRatio: actionAspect,
-                              children: [
-                                _buildBigActionTile(
-                                  isDark: isDark,
-                                  icon: Icons.schedule,
-                                  title: 'รอดำเนินการ',
-                                  color: Colors.orange,
-                                  count: _countWaiting,
+                          Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: GridView.count(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  crossAxisCount: actionCols,
+                                  mainAxisSpacing: 12,
+                                  crossAxisSpacing: 12,
+                                  childAspectRatio: actionAspect,
+                                  children: [
+                                    _buildBigActionTile(
+                                      isDark: isDark,
+                                      icon: Icons.schedule,
+                                      title: 'รอดำเนินการ',
+                                      color: Colors.orange,
+                                      count: _countWaiting,
+                                    ),
+                                    _buildBigActionTile(
+                                      isDark: isDark,
+                                      icon: Icons.engineering,
+                                      title: 'กำลังซ่อม',
+                                      color: Colors.blue,
+                                      count: _countInProgress,
+                                    ),
+                                    _buildBigActionTile(
+                                      isDark: isDark,
+                                      icon: Icons.check_circle,
+                                      title: 'เสร็จสิ้น',
+                                      color: Colors.green,
+                                      count: _countDone,
+                                    ),
+                                    _buildBigActionTile(
+                                      isDark: isDark,
+                                      icon: Icons.shopping_cart,
+                                      title: 'รอจัดซื้อ PR',
+                                      color: Colors.deepPurple,
+                                      count: _countPR,
+                                    ),
+                                  ],
                                 ),
-                                _buildBigActionTile(
-                                  isDark: isDark,
-                                  icon: Icons.engineering,
-                                  title: 'กำลังซ่อม',
-                                  color: Colors.blue,
-                                  count: _countInProgress,
+                              ),
+                              const SizedBox(height: 12),
+                              if (_pendingRequests.isNotEmpty)
+                                Card(
+                                  color: isDark ? Colors.grey[900] : Colors.white,
+                                  elevation: 6,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                                  margin: const EdgeInsets.symmetric(vertical: 8),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'รายการรออนุมัติ',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: isDark ? Colors.white : Colors.blue.shade700,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Column(
+                                          children: _pendingRequests.map((req) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => PendingDetailPage(request: req),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                margin: const EdgeInsets.only(bottom: 12),
+                                                child: ListTile(
+                                                  tileColor: isDark ? Colors.grey[850] : Colors.grey[50],
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                                  title: Text(req['title'] ?? ''),
+                                                  subtitle: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const SizedBox(height: 6),
+                                                      Text(req['description'] ?? ''),
+                                                      const SizedBox(height: 8),
+                                                      Row(
+                                                        children: [
+                                                          Icon(Icons.person, size: 14, color: isDark ? Colors.white70 : Colors.black54),
+                                                          const SizedBox(width: 6),
+                                                          Text(req['requester'] ?? ''),
+                                                          const SizedBox(width: 12),
+                                                          Icon(Icons.calendar_today, size: 14, color: isDark ? Colors.white70 : Colors.black54),
+                                                          const SizedBox(width: 6),
+                                                          Text(req['requestDate'] ?? ''),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  trailing: Text(req['category'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                                _buildBigActionTile(
-                                  isDark: isDark,
-                                  icon: Icons.check_circle,
-                                  title: 'เสร็จสิ้น',
-                                  color: Colors.green,
-                                  count: _countDone,
-                                ),
-                                _buildBigActionTile(
-                                  isDark: isDark,
-                                  icon: Icons.shopping_cart,
-                                  title: 'รอจัดซื้อ PR',
-                                  color: Colors.deepPurple,
-                                  count: _countPR,
-                                ),
-                              ],
-                            ),
+                            ],
                           ),
                         ],
                       ),
