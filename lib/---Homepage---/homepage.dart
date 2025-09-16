@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
       'title': 'ท่อน้ำรั่วห้องน้ำชั้น 3',
       'category': 'ประปา',
       'type': 'ซ่อม',
-      'description': 'ท่อนน้ำใต้อ่างล้างหน้ามีน้ำรั่ว',
+      'description': 'ท่อน้ำใต้อ่างล้างหน้ามีน้ำรั่ว',
       'requestDate': '2024-03-16',
       'requester': 'นางสาวมาลี สวยงาม',
       'phone': '089-876-5432',
@@ -504,70 +504,112 @@ class _HomePageState extends State<HomePage> {
                               ),
                               const SizedBox(height: 12),
                               if (_pendingRequests.isNotEmpty)
-                                Card(
-                                  color: isDark ? Colors.grey[900] : Colors.white,
-                                  elevation: 6,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                                  margin: const EdgeInsets.symmetric(vertical: 8),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'รายการรออนุมัติ',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: isDark ? Colors.white : Colors.blue.shade700,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Column(
-                                          children: _pendingRequests.map((req) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => PendingDetailPage(request: req),
-                                                  ),
-                                                );
-                                              },
-                                              child: Container(
-                                                margin: const EdgeInsets.only(bottom: 12),
-                                                child: ListTile(
-                                                  tileColor: isDark ? Colors.grey[850] : Colors.grey[50],
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                                  title: Text(req['title'] ?? ''),
-                                                  subtitle: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      const SizedBox(height: 6),
-                                                      Text(req['description'] ?? ''),
-                                                      const SizedBox(height: 8),
-                                                      Row(
-                                                        children: [
-                                                          Icon(Icons.person, size: 14, color: isDark ? Colors.white70 : Colors.black54),
-                                                          const SizedBox(width: 6),
-                                                          Text(req['requester'] ?? ''),
-                                                          const SizedBox(width: 12),
-                                                          Icon(Icons.calendar_today, size: 14, color: isDark ? Colors.white70 : Colors.black54),
-                                                          const SizedBox(width: 6),
-                                                          Text(req['requestDate'] ?? ''),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  trailing: Text(req['category'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ],
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'รายการรออนุมัติ',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
+                                ),
+                              if (_pendingRequests.isNotEmpty)
+                                const SizedBox(height: 8),
+                              if (_pendingRequests.isNotEmpty)
+                                Column(
+                                  children: _pendingRequests.map((req) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PendingDetailPage(request: req),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(bottom: 12),
+                                        child: Card(
+                                          color: isDark ? Colors.grey[850] : Colors.white,
+                                          elevation: 4,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      req['id'] ?? '',
+                                                      style: TextStyle(
+                                                        color: isDark ? Colors.lightBlueAccent : Colors.blue,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    Container(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                                      decoration: BoxDecoration(
+                                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                      child: Text(
+                                                        req['category'] ?? '',
+                                                        style: TextStyle(
+                                                          color: isDark ? Colors.white70 : Colors.blue,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  req['title'] ?? '',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: isDark ? Colors.white : Colors.black87,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                Text(
+                                                  req['description'] ?? '',
+                                                  style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+                                                ),
+                                                const SizedBox(height: 12),
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.person, size: 14, color: isDark ? Colors.white70 : Colors.black54),
+                                                    const SizedBox(width: 6),
+                                                    Text(req['requester'] ?? '', style: TextStyle(color: isDark ? Colors.white70 : Colors.black54)),
+                                                    const SizedBox(width: 12),
+                                                    Icon(Icons.calendar_today, size: 14, color: isDark ? Colors.white70 : Colors.black54),
+                                                    const SizedBox(width: 6),
+                                                    Text(req['requestDate'] ?? '', style: TextStyle(color: isDark ? Colors.white70 : Colors.black54)),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: Text(
+                                                    'แตะเพื่อดูรายละเอียด  ›',
+                                                    style: TextStyle(color: isDark ? Colors.lightBlueAccent : Colors.blue),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                             ],
                           ),
