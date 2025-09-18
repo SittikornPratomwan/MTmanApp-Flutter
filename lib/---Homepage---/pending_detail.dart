@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../---Drawer---/1.setting/theme_provider.dart';
 import '../---Request---/signature_page.dart';
 
@@ -34,173 +35,218 @@ class _PendingDetailPageState extends State<PendingDetailPage> {
         backgroundColor: isDark ? Colors.lightBlueAccent : Colors.blue,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Container(
-        decoration: isDark
-            ? const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFF232526), Color(0xFF414345)],
-                ),
-              )
-            : const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFFB0D0F0), Color(0xFFDCEBFA)],
-                ),
-              ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Card(
-                    color: isDark ? Colors.grey[900] : Colors.white,
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final maxContentWidth = math.min(1100, constraints.maxWidth * 0.95).toDouble();
+
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: isDark
+                ? const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF232526), Color(0xFF414345)],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Header with ID and Status
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
+                  )
+                : const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFFB0D0F0), Color(0xFFDCEBFA)],
+                    ),
+                  ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxContentWidth),
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
+                          child: Card(
+                            color: isDark ? Colors.grey[900] : Colors.white,
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    widget.request['id'] ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
+                                  // Header with ID and Status
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.request['id'] ?? '',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            widget.request['title'] ?? '',
+                                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
+                                      ),
+                                      Chip(
+                                        label: Text(widget.request['category'] ?? ''),
+                                        backgroundColor: _getCategoryColor(widget.request['category'] ?? ''),
+                                        labelStyle: const TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    widget.request['title'] ?? '',
-                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                  const SizedBox(height: 20),
+
+                                  // Category
+                                  _buildDetailItem(
+                                    isDark: isDark,
+                                    icon: Icons.category,
+                                    label: 'หมวดหมู่',
+                                    value: widget.request['category'] ?? '',
+                                    color: _getCategoryColor(widget.request['category'] ?? ''),
                                   ),
+
+                                  // Type
+                                  _buildDetailItem(
+                                    isDark: isDark,
+                                    icon: Icons.build,
+                                    label: 'ประเภท',
+                                    value: widget.request['type'] ?? '',
+                                  ),
+
+                                  // Title
+                                  _buildDetailItem(
+                                    isDark: isDark,
+                                    icon: Icons.title,
+                                    label: 'หัวข้อ',
+                                    value: widget.request['title'] ?? '',
+                                  ),
+
+                                  // Description
+                                  _buildDetailItem(
+                                    isDark: isDark,
+                                    icon: Icons.description,
+                                    label: 'รายละเอียด',
+                                    value: widget.request['description'] ?? '',
+                                    isMultiline: true,
+                                  ),
+
+                                  // Requester
+                                  _buildDetailItem(
+                                    isDark: isDark,
+                                    icon: Icons.person,
+                                    label: 'ผู้ขอ',
+                                    value: widget.request['requester'] ?? '',
+                                  ),
+
+                                  // Phone
+                                  _buildDetailItem(
+                                    isDark: isDark,
+                                    icon: Icons.phone,
+                                    label: 'โทรศัพท์',
+                                    value: widget.request['phone'] ?? '',
+                                  ),
+
+                                  // Request Date
+                                  _buildDetailItem(
+                                    isDark: isDark,
+                                    icon: Icons.calendar_today,
+                                    label: 'วันที่ขอ',
+                                    value: widget.request['requestDate'] ?? '',
+                                  ),
+
+                                  // Procurement (optional)
+                                  if (widget.request['procurement'] != null) ...[
+                                    const SizedBox(height: 8),
+                                    Text('ข้อมูลการจัดซื้อ', style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
+                                  ],
                                 ],
                               ),
-                              Chip(
-                                label: Text(widget.request['category'] ?? ''),
-                                backgroundColor: _getCategoryColor(widget.request['category'] ?? ''),
-                                labelStyle: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Approve Button at bottom8
+                      if (!_isApproved)
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // Reject action: simply mark as approved=false and maybe pop or show feedback
+                                    // For now we'll close the page and return false
+                                    Navigator.of(context).pop(false);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 2,
+                                  ),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.clear, size: 20),
+                                      SizedBox(width: 8),
+                                      Text('ปฏิเสธ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    _showApprovalDialog();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 4,
+                                  ),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.edit, size: 24),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'เซ็นชื่ออนุมัติ',
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
-
-                          // Category
-                          _buildDetailItem(
-                            isDark: isDark,
-                            icon: Icons.category,
-                            label: 'หมวดหมู่',
-                            value: widget.request['category'] ?? '',
-                            color: _getCategoryColor(widget.request['category'] ?? ''),
-                          ),
-
-                          // Type
-                          _buildDetailItem(
-                            isDark: isDark,
-                            icon: Icons.build,
-                            label: 'ประเภท',
-                            value: widget.request['type'] ?? '',
-                          ),
-
-                          // Title
-                          _buildDetailItem(
-                            isDark: isDark,
-                            icon: Icons.title,
-                            label: 'หัวข้อ',
-                            value: widget.request['title'] ?? '',
-                          ),
-
-                          // Description
-                          _buildDetailItem(
-                            isDark: isDark,
-                            icon: Icons.description,
-                            label: 'รายละเอียด',
-                            value: widget.request['description'] ?? '',
-                            isMultiline: true,
-                          ),
-
-                          // Requester
-                          _buildDetailItem(
-                            isDark: isDark,
-                            icon: Icons.person,
-                            label: 'ผู้ขอ',
-                            value: widget.request['requester'] ?? '',
-                          ),
-
-                          // Phone
-                          _buildDetailItem(
-                            isDark: isDark,
-                            icon: Icons.phone,
-                            label: 'โทรศัพท์',
-                            value: widget.request['phone'] ?? '',
-                          ),
-
-                          // Request Date
-                          _buildDetailItem(
-                            isDark: isDark,
-                            icon: Icons.calendar_today,
-                            label: 'วันที่ขอ',
-                            value: widget.request['requestDate'] ?? '',
-                          ),
-
-                          // Procurement (optional)
-                          if (widget.request['procurement'] != null) ...[
-                            const SizedBox(height: 8),
-                            Text('ข้อมูลการจัดซื้อ', style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
-                          ],
-                        ],
-                      ),
-                    ),
+                        ),
+                    ],
                   ),
                 ),
               ),
-
-              // Approve Button at bottom
-              if (!_isApproved)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _showApprovalDialog();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 4,
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.edit, size: 24),
-                        SizedBox(width: 8),
-                        Text(
-                          'เซ็นชื่ออนุมัติ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -360,6 +406,14 @@ class _PendingDetailPageState extends State<PendingDetailPage> {
                 ),
               ),
             ),
+            TextButton(
+              onPressed: () {
+                // Reject from dialog: close dialog and return a rejection result to caller if needed
+                Navigator.of(context).pop();
+                // Optionally handle rejection here (e.g., call an API). For now we just close.
+              },
+              child: const Text('ปฏิเสธ', style: TextStyle(color: Colors.red)),
+            ),
             ElevatedButton(
               onPressed: () async {
                 Navigator.of(context).pop();
@@ -380,7 +434,7 @@ class _PendingDetailPageState extends State<PendingDetailPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
+                backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
